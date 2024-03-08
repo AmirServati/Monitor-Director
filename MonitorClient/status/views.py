@@ -28,23 +28,20 @@ def switch(request, id):
     return HttpResponse(cec.transmit(destination, opcode, HDMI[id]))
 
 def autoplay(request):
-    minute      = request.GET['minute'] 
-    hour        = request.GET['hour']
-    day_month   = request.GET['day_month'] 
-    month       = request.GET['month']
-    day_week    = request.GET['day_week'] 
-    playlist    = request.GET['playlist']
+    hour_start      = request.GET['hour_start'] 
+    minute_start    = request.GET['minute_start']
+    hour_finish     = request.GET['hour_finish'] 
+    minute_finish   = request.GET['minute_finish']
+    days            = tuple(map(int, request.GET['days'].split(',')))
+    playlist        = request.GET['playlist']
     cron = CronTab(user=True)
-    job = cron.new(command='vlc http://192.168.5.70:80/%s.xspf' % playlist)
-    if minute != -1:
-        job.minute.on(minute)
-    if hour != -1:
-        job.hour.also.on(hour)
-    if day_month != -1:
-        job.day.also.on(day_month)
-    if month != -1:
-        job.month.also.on(month)
-    if day_week != -1:
-        job.dow.also.on(day_week)
+    playjob = cron.new(command='echo "as" | cec-client -s -d 1;vlc http://192.168.5.70:80/%s.xspf --fullscreen' % playlist)
+    playjob.minute.on(minute_start)
+    playjob.hour.also.on(hour_start)
+    for day in days:
+        playjob.dow.also.on(day)
+    exitjob = cron.new(commnd='dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Quit;echo "tx 4f:82:20:00" | cec-client -s -d 1')
+    exitjob.minute.on(minute_finish)
+    exitjob.hour.also.on(hour_finish)
     cron.write()
     return HttpResponse("done")
