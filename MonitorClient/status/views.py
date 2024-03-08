@@ -40,7 +40,7 @@ def autoplay(request):
     playjob.hour.also.on(hour_start)
     for day in days:
         playjob.dow.also.on(day)
-    exitjob = cron.new(commnd='dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Quit;echo "tx 4f:82:20:00" | cec-client -s -d 1')
+    exitjob = cron.new(command='dbus-send --type=method_call --dest=org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Quit;echo "tx 4f:82:20:00" | cec-client -s -d 1')
     exitjob.minute.on(minute_finish)
     exitjob.hour.also.on(hour_finish)
     cron.write()
