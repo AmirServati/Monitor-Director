@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import os, subprocess, cec
+import cec
+from crontab import CronTab
 
 destination = cec.CECDEVICE_BROADCAST
 opcode = cec.CEC_OPCODE_ACTIVE_SOURCE
@@ -25,3 +26,25 @@ def index(request):
 def switch(request, id):
     cec.init()
     return HttpResponse(cec.transmit(destination, opcode, HDMI[id]))
+
+def autoplay(request):
+    minute      = request.GET['minute'] 
+    hour        = request.GET['hour']
+    day_month   = request.GET['day_month'] 
+    month       = request.GET['month']
+    day_week    = request.GET['day_week'] 
+    playlist    = request.GET['playlist']
+    cron = CronTab(user=True)
+    job = cron.new(command='vlc http://192.168.5.70:80/%s.xspf' % playlist)
+    if minute != -1:
+        job.minute.on(minute)
+    if hour != -1:
+        job.hour.also.on(hour)
+    if day_month != -1:
+        job.day.also.on(day_month)
+    if month != -1:
+        job.month.also.on(month)
+    if day_week != -1:
+        job.dow.also.on(day_week)
+    cron.write()
+    return HttpResponse("done")
