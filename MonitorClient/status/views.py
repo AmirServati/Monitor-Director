@@ -18,7 +18,7 @@ def index(request):
     cec.init()
     devices = cec.list_devices()
     status = ""
-    for device in devices.values:
+    for device in devices.values():
         status += device.osd_string + " (" + device.vendor + "): " + device.physical_address + "\n"
     return HttpResponse(status)
 
