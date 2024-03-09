@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import cec, os
+import cec
 from crontab import CronTab
 
 destination = cec.CECDEVICE_BROADCAST
@@ -35,10 +35,7 @@ def autoplay(request):
     days            = tuple(map(int, request.GET['days'].split(',')))
     playlist        = request.GET['playlist']
     cron = CronTab(user=True)
-    os.system("echo #!/bin/sh > ~/Desktop/%s.sh" % playlist)
-    os.system("echo vlc http://192.168.5.70:80/%s.xspf --fullscreen >> ~/Desktop/%s.sh" % (playlist,playlist))
-    os.system("chmod 777 ~/Desktop/%s.sh" % playlist)
-    playjob = cron.new(command='echo "as" | cec-client -s -d 1; ~/Desktop/%s.sh' % playlist)
+    playjob = cron.new(command='echo "as" | cec-client -s -d 1; DISPLAY=:0.0 vlc http://192.168.5.70:80/%s.xspf --fullscreen' % playlist)
     playjob.minute.on(minute_start)
     playjob.hour.also.on(hour_start)
     for day in days:
