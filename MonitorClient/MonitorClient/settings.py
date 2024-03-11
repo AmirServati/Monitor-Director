@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import netifaces
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-24%3oj@vj)phw^5wr*47-sn$8#(zkxwqms8dfmu340&y=+k00$
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '192.168.5.66',
+    netifaces.ifaddresses('wlan0')[2][0]['addr']
 ]
 
 

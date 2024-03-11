@@ -43,5 +43,7 @@ def autoplay(request):
     exitjob = cron.new(command='killall -9 vlc;echo "tx 4f:82:20:00" | cec-client -s -d 1')
     exitjob.minute.on(minute_finish)
     exitjob.hour.also.on(hour_finish)
+    for day in days:
+        exitjob.dow.also.on(day)
     cron.write()
     return HttpResponse("done")
