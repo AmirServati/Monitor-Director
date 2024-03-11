@@ -35,7 +35,7 @@ def autoplay(request):
     days            = tuple(map(int, request.GET['days'].split(',')))
     playlist        = request.GET['playlist']
     cron = CronTab(user=True)
-    playjob = cron.new(command='echo "as" | cec-client -s -d 1; DISPLAY=:0.0 vlc http://192.168.5.58:80/Playlists/xspf/%s.xspf --fullscreen' % playlist)
+    playjob = cron.new(command='echo "as" | cec-client -s -d 1; DISPLAY=:0.0 vlc http://192.168.5.58:80/Playlists/xspf/%s.xspf --fullscreen --loop' % playlist)
     playjob.minute.on(minute_start)
     playjob.hour.also.on(hour_start)
     for day in days:
