@@ -55,5 +55,6 @@ def autoplay(request):
 
 @csrf_exempt
 def autodelete(request):
-    print(request.POST)
+    print(request.POST.get("playcomment"))
+    print(request.POST.get("exitcomment"))
     return HttpResponse("done")
