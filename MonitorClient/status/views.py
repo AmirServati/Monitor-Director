@@ -41,14 +41,14 @@ def autoplay(request):
     playjob.hour.also.on(hour_start)
     for day in days:
         playjob.dow.also.on(day)
-    play_comment = "PLAY->%s@%s-%s:%s" % (playlist, request.GET['days'], hour_start, minute_start)
+    play_comment = "PLAY %s %s %s %s" % (playlist, request.GET['days'], hour_start, minute_start)
     playjob.set_comment = play_comment
     exitjob = cron.new(command='killall -9 vlc;echo "tx 4f:82:20:00" | cec-client -s -d 1', comment="EXIT")
     exitjob.minute.on(minute_finish)
     exitjob.hour.also.on(hour_finish)
     for day in days:
         exitjob.dow.also.on(day)
-    exit_comment = "EXIT->%s@%s-%s:%s" % (playlist, request.GET['days'], hour_finish, minute_finish)
+    exit_comment = "EXIT %s %s %s %s" % (playlist, request.GET['days'], hour_finish, minute_finish)
     exitjob.set_comment = exit_comment
     cron.write()
     return HttpResponse("done")
