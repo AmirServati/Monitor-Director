@@ -55,6 +55,8 @@ def autoplay(request):
 
 @csrf_exempt
 def autodelete(request):
-    print(request.POST.get("playcomment"))
-    print(request.POST.get("exitcomment"))
+    cron = CronTab(user=True)
+    cron.remove_all(comment=request.POST.get("playcomment"))
+    cron.remove_all(comment=request.POST.get("exitcomment"))
+    cron.write()
     return HttpResponse("done")
