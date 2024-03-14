@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import cec
 from crontab import CronTab
@@ -52,6 +53,7 @@ def autoplay(request):
     cron.write()
     return HttpResponse("done")
 
+@csrf_exempt
 def autodelete(request):
     print(request.POST)
     return HttpResponse("done")
