@@ -36,16 +36,16 @@ def autoplay(request):
     days            = tuple(map(int, request.GET['days'].split(',')))
     playlist        = request.GET['playlist']
     cron = CronTab(user=True)
-    playjob = cron.new(command='echo "as" | cec-client -s -d 1; DISPLAY=:0.0 vlc http://192.168.5.58:80/Playlists/xspf/%s.xspf --fullscreen --loop' % playlist, comment="PALY")
+    playjob = cron.new(command='echo "as" | cec-client -s -d 1; DISPLAY=:0.0 vlc http://192.168.5.58:80/Playlists/xspf/%s.xspf --fullscreen --loop' % playlist)
     play_comment = "PLAY->%s@%s-%s:%s" % (playlist, request.GET['days'], hour_start, minute_start)
-    playjob.set_comment = play_comment
+    playjob.set_comment(play_comment)
     playjob.minute.on(minute_start)
     playjob.hour.also.on(hour_start)
     for day in days:
         playjob.dow.also.on(day)
-    exitjob = cron.new(command='echo "tx 4f:82:20:00" | cec-client -s -d 1; killall -9 vlc', comment="EXIT")
+    exitjob = cron.new(command='echo "tx 4f:82:20:00" | cec-client -s -d 1; killall -9 vlc')
     exit_comment = "EXIT->%s@%s-%s:%s" % (playlist, request.GET['days'], hour_finish, minute_finish)
-    exitjob.set_comment = exit_comment
+    exitjob.set_comment(exit_comment)
     exitjob.minute.on(minute_finish)
     exitjob.hour.also.on(hour_finish)
     for day in days:
