@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 import cec
 from crontab import CronTab
+from .models import Monitor
 
 destination = cec.CECDEVICE_BROADCAST
 opcode = cec.CEC_OPCODE_ACTIVE_SOURCE
@@ -15,8 +16,7 @@ HDMI = {
 
 # Create your views here.
 def status(request):
-    f = open("/static/status", "r")
-    source = f.readline()
+    source = Monitor.objects.get(id = 0).source
     return HttpResponse(source)
 
 def switch(request, id):
