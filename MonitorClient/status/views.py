@@ -15,7 +15,7 @@ HDMI = {
 
 # Create your views here.
 def status(request):
-    f = open("./static/status", "r")
+    f = open("/static/status", "r")
     source = f.readline()
     return HttpResponse(source)
 
