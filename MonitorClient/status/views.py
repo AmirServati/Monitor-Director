@@ -16,7 +16,7 @@ HDMI = {
 
 # Create your views here.
 def status(request):
-    source = Monitor.objects.get(id = 0).source
+    source = Monitor.objects.get(id = 1).source
     return HttpResponse(source)
 
 def switch(request, id):
