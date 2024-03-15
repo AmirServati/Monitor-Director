@@ -14,15 +14,10 @@ HDMI = {
 }
 
 # Create your views here.
-def index(request):
-    #status = os.system("echo 'scan' | cec-client -s -d 1")
-    #print(status)
-    cec.init()
-    devices = cec.list_devices()
-    status = ""
-    for device in devices.values():
-        status += device.osd_string + " (" + device.vendor + "): " + device.physical_address + "\n"
-    return HttpResponse(status)
+def status(request):
+    f = open("./static/status", "r")
+    source = f.readline()
+    return HttpResponse(source)
 
 def switch(request, id):
     cec.init()

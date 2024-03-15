@@ -18,7 +18,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('', views.status, name="status"),
     path('switch/<int:id>/', views.switch, name="switch"),
     path('autoplay/', views.autoplay, name="autoplay"),
     path('autodelete/', views.autodelete, name="autodelete"),
