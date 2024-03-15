@@ -1,17 +1,12 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
-import cec
 from crontab import CronTab
 from .models import Monitor
 
-destination = cec.CECDEVICE_BROADCAST
-opcode = cec.CEC_OPCODE_ACTIVE_SOURCE
 HDMI = {
-    1 : b'\x10\x00',
-    2 : b'\x20\x00',
-    3 : b'\x30\x00',
-    4 : b'\x40\x00'
+    1 : 'TV',
+    2 : 'Player'
 }
 
 # Create your views here.
@@ -20,8 +15,10 @@ def status(request):
     return HttpResponse(source)
 
 def switch(request, id):
-    cec.init()
-    return HttpResponse(cec.transmit(destination, opcode, HDMI[id]))
+    monitor = Monitor.objects.get(id = 1)
+    monitor.source = HDMI[id]
+    monitor.save()
+    return HttpResponse(monitor.source)
 
 def autoplay(request):
     hour_start      = request.GET['hour_start'] 
