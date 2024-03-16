@@ -65,7 +65,9 @@ def autopow(request):
     cron = CronTab(user=True)
     if request.GET:
         try:
+            print("searching")
             onjob = cron.find_comment('on')
+            print("found")
             offjob = cron.find_comment('off')
             print("found")
             for i in onjob:
