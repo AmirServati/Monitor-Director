@@ -22,8 +22,10 @@ def switch(request, id):
     monitor.source = HDMI[id]
     monitor.save()
     if id == 1:
+        os.system("curl http://%s:8000/status/switch/1" % IP)
         os.system('echo "tx 4f:82:20:00" | cec-client -s -d 1')
     else:
+        os.system("curl http://%s:8000/status/switch/2" % IP)
         os.system('echo "as" | cec-client -s -d 1')
     return HttpResponse(monitor.source)
 
@@ -86,10 +88,10 @@ def autopow(request):
         on_minute = request.POST.get('on').split(":")[1]
         off_hour = request.POST.get('off').split(":")[0]
         off_minute = request.POST.get('off').split(":")[1]
-        onjob = cron.new(command = 'echo "on 0" | cec-client -s -d 1; wget http://%s:8000/status/switch/1' % IP, comment = "on")
+        onjob = cron.new(command = 'echo "on 0" | cec-client -s -d 1; curl http://%s:8000/status/switch/1' % IP, comment = "on")
         onjob.hour.on(on_hour)
         onjob.minute.also.on(on_minute)
-        offjob = cron.new(command = 'echo "standby 0" | cec-client -s -d 1; wget http://%s:8000/status/switch/1' % IP, comment = "off")
+        offjob = cron.new(command = 'echo "standby 0" | cec-client -s -d 1; curl http://%s:8000/status/switch/1' % IP, comment = "off")
         offjob.hour.on(off_hour)
         offjob.minute.also.on(off_minute)
         cron.write()
