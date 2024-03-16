@@ -63,7 +63,7 @@ def autodelete(request):
 @csrf_exempt
 def autopow(request):
     cron = CronTab(user=True)
-    if request.GET:
+    if request.method == "GET":
         try:
             print("searching")
             onjob = cron.find_comment('on')
@@ -82,7 +82,7 @@ def autopow(request):
                 print(off_minute)
         except:
             pass
-    elif request.POST:      
+    elif request.method == "POST":      
         try:
             cron.remove_all(comment='on')
             cron.remove_all(comment='off')
