@@ -3,8 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from crontab import CronTab
 from .models import Monitor
+import netifaces
 import os
 
+IP = netifaces.ifaddresses('wlan0')[2][0]['addr']
 HDMI = {
     1 : 'TV',
     2 : 'Player'
@@ -60,8 +62,29 @@ def autodelete(request):
 
 @csrf_exempt
 def autopow(request):
-    on = request.POST.get('on')
-    off = request.POST.get('off')
-    print(on)
-    print(off)
+    cron = CronTab(user=True)
+    if request.GET:
+        try:
+            onjob = cron.find_comment('on')
+            offjob = cron.find_comment('off')
+            print(onjob)
+            print(offjob)
+        except:
+            pass        
+    try:
+        cron.remove_all(comment='on')
+        cron.remove_all(comment='off')
+    except:
+        pass
+    on_hour = request.POST.get('on').split(":")[0]
+    on_minute = request.POST.get('on').split(":")[1]
+    off_hour = request.POST.get('off').split(":")[0]
+    off_minute = request.POST.get('off').split(":")[1]
+    onjob = cron.new(command = 'echo "on 0" | cec-client -s -d 1; wget http://%s:8000/status/switch/1' % IP, comment = "on")
+    onjob.hour.on(on_hour)
+    onjob.minute.also.on(on_minute)
+    offjob = cron.new(command = 'echo "standby 0" | cec-client -s -d 1; wget http://%s:8000/status/switch/1' % IP, comment = "off")
+    offjob.hour.on(off_hour)
+    offjob.minute.also.on(off_minute)
+    cron.write()
     return HttpResponse("done")
