@@ -22,4 +22,5 @@ urlpatterns = [
     path('switch/<int:id>/', views.switch, name="switch"),
     path('autoplay/', views.autoplay, name="autoplay"),
     path('autodelete/', views.autodelete, name="autodelete"),
+    path('autopow/', views.autopow, name="autopow"),
 ]

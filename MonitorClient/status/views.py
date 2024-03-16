@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from crontab import CronTab
 from .models import Monitor
+import os
 
 HDMI = {
     1 : 'TV',
@@ -18,6 +19,10 @@ def switch(request, id):
     monitor = Monitor.objects.get(id = 1)
     monitor.source = HDMI[id]
     monitor.save()
+    if id == 1:
+        os.system('echo "tx 4f:82:20:00" | cec-client -s -d 1')
+    else:
+        os.system('echo "as" | cec-client -s -d 1')
     return HttpResponse(monitor.source)
 
 def autoplay(request):
@@ -51,4 +56,12 @@ def autodelete(request):
     cron.remove_all(comment=request.POST.get("playcomment"))
     cron.remove_all(comment=request.POST.get("exitcomment"))
     cron.write()
+    return HttpResponse("done")
+
+@csrf_exempt
+def autopow(request):
+    on = request.POST.get('on')
+    off = request.POST.get('off')
+    print(on)
+    print(off)
     return HttpResponse("done")
