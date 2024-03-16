@@ -65,21 +65,15 @@ def autopow(request):
     cron = CronTab(user=True)
     if request.method == "GET":
         try:
-            print("searching")
             onjob = cron.find_comment('on')
-            print("found")
             offjob = cron.find_comment('off')
-            print("found")
             for i in onjob:
                 on_hour = i.hour
-                print(on_hour)
                 on_minute = i.minute
-                print(on_minute)
             for i in offjob:
                 off_hour = i.hour
-                print(off_hour)
                 off_minute = i.minute
-                print(off_minute)
+            return HttpResponse("%s:%s - %s:%s" % (on_hour, on_minute, off_hour, off_minute))
         except:
             pass
     elif request.method == "POST":      
