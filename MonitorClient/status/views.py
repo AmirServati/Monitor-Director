@@ -67,8 +67,16 @@ def autopow(request):
         try:
             onjob = cron.find_comment('on')
             offjob = cron.find_comment('off')
-            print(onjob)
-            print(offjob)
+            for i in onjob:
+                on_hour = i.hour
+                on_minute = i.minute
+            for i in offjob:
+                off_hour = i.hour
+                off_minute = i.minute
+            print(on_hour)
+            print(on_minute)
+            print(off_hour)
+            print(off_minute)
         except:
             pass
     elif request.POST:      
