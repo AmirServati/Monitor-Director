@@ -6,7 +6,7 @@ from .models import Monitor
 import netifaces
 import os
 
-IP = netifaces.ifaddresses('wlan0')[2][0]['addr']
+IP = netifaces.ifaddresses('eth0')[2][0]['addr']
 HDMI = {
     1 : 'TV',
     2 : 'Player'
