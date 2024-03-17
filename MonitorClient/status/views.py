@@ -6,7 +6,7 @@ from .models import Monitor
 import netifaces
 import os
 
-IP = netifaces.ifaddresses('eth0')[2][0]['addr']
+IP = netifaces.ifaddresses('wlan0')[2][0]['addr']
 HDMI = {
     1 : 'TV',
     2 : 'Player'
@@ -40,7 +40,7 @@ def autoplay(request):
     days            = tuple(map(int, request.GET['days'].split(',')))
     playlist        = request.GET['playlist']
     cron = CronTab(user=True)
-    playjob = cron.new(command='echo "as" | cec-client -s -d 1; wget http://%s:8000/status/switch/2 --delete-after; DISPLAY=:0.0 vlc http://192.168.5.58:80/Playlists/xspf/%s.xspf --fullscreen --loop' % (IP, playlist))
+    playjob = cron.new(command='echo "as" | cec-client -s -d 1; wget http://%s:8000/status/switch/2 --delete-after; DISPLAY=:0.0 vlc http://192.168.1.106:80/Playlists/xspf/%s.xspf --fullscreen --loop' % (IP, playlist))
     play_comment = "PLAY->%s@%s-%s:%s" % (playlist, request.GET['days'], hour_start, minute_start)
     playjob.set_comment(play_comment)
     playjob.minute.on(minute_start)

@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-24%3oj@vj)phw^5wr*47-sn$8#(zkxwqms8dfmu340&y=+k00$
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    netifaces.ifaddresses('eth0')[2][0]['addr']
+    netifaces.ifaddresses('wlan0')[2][0]['addr']
 ]
 
 
